@@ -13,12 +13,7 @@
 			}
 		}
 	],
-	"easycom": {
-			"autoscan": true,
-			"custom": {
-				"^uv-(.*)": "@climblee/uv-ui/components/uv-$1/uv-$1.vue"
-			}
-		},
+
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "PM_APP",
