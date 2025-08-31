@@ -1,0 +1,9 @@
+{
+	"dependencies": {
+		"@dcloudio/uni-app": "3.0.0-4070520250711001"
+	},
+	"devDependencies": {
+		"@dcloudio/vite-plugin-uni": "3.0.0-4070520250711001",
+		"vite": "5.2.8"
+	}
+}
