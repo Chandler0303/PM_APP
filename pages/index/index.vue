@@ -1,6 +1,5 @@
 <template>
 	<view class="index-view">
-		<uv-status-bar></uv-status-bar>
 		<view class="header">
 			<view class="input-view">
 				<uv-input v-model="searchForm.name" placeholder="请输入名称"></uv-input>
@@ -186,11 +185,7 @@
 		if (!isSelect) {
 			filterData = filterData
 		} else {
-			filterData.forEach(item => {
-				if (searchForm.stages[item.stage]) {
-					filterData.push(item)
-				}
-			})
+			filterData = filterData.filter(item => searchForm.stages[item.stage])
 		}
 		// 延期
 		if (searchForm.delay) {
@@ -240,7 +235,7 @@
 			}
 			scroll-view{
 				width: 100%;
-				height: calc(100% - 102rpx - var(--status-bar-height));
+				height: calc(100% - 102rpx);
 				background-color: white;
 				.delay-view{
 					background-color: #fff;
