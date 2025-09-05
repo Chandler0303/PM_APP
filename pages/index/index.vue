@@ -3,7 +3,7 @@
 		<uv-status-bar></uv-status-bar>
 		<view class="header">
 			<view class="input-view">
-				<uv-input v-model="searchForm.name" placeholder="请输入项目名称"></uv-input>
+				<uv-input v-model="searchForm.name" placeholder="请输入名称"></uv-input>
 				<uv-button size="small" type="primary" @tap="search">搜索</uv-button>
 			</view>
 		</view>
@@ -23,10 +23,10 @@
 							<uv-avatar class="avatar" size="180rpx" :src="item.userAvatar" shape="square"></uv-avatar>
 							<view class="info-view">
 								<view class="name-view">
-									<block v-if="item.status != 3 && item.delay">
+									<block v-if="item.delay">
 										<uv-tags class="tag" text="延期" size="mini" :type="item.delay === 1 ? 'warning' : 'error'"></uv-tags>
 									</block>
-									<text class="name two-ellipsis" :class="item.status != 3 && item.delay ? 'name-indent' : ''">{{ item.name }}</text>
+									<text class="name two-ellipsis" :class="item.delay ? 'name-indent' : ''">{{ item.name }}</text>
 								</view>
 								<view class="cate-list">
 									<text>{{ item.companyLabel }}</text>
@@ -36,11 +36,8 @@
 									<text>{{ item.businessTypeLabel }}</text>
 								</view>
 								<view class="tag-list">
-									
 									<uv-tags class="tag" :text="item.statusLabel" plain size="mini" :type="item.status === 1 ? 'warning' : item.staus === 2 ? 'primary' : 'success'"></uv-tags>
-									<block v-if="item.status !== 3">
-										<uv-tags class="tag" :text="item.stageLabel" size="mini" plain type="success"></uv-tags>
-									</block>
+									<uv-tags class="tag" :text="item.stageLabel" size="mini" plain type="success"></uv-tags>
 									<block v-if="item.userName">
 										<uv-tags class="tag" :text="item.userName" size="mini" plain type="success"></uv-tags>
 									</block>
@@ -66,7 +63,7 @@
 <script setup lang="ts">
 	import { reactive, ref } from 'vue';
 	import request from '@/utils/request';
-	import { onLoad } from '@dcloudio/uni-app'
+	import { onLoad, onReady } from '@dcloudio/uni-app'
 	import { getDictLabel, getImageUrl } from '@/utils/tool'
 	import { businessTypeDict, projectStatusDict, projectTypeDict } from '@/common/dict';
 	import ProcessHandlerFactory from '../../utils/processHandle';
@@ -83,6 +80,7 @@
 	const allList = ref([])
 	const list = ref([])
 	const procedureList = ref([])
+	const managerInfo = ref()
 	
 	const pageSize = reactive({
 		page: 1,
@@ -90,8 +88,14 @@
 		total: 0
 	})
 	
-	onLoad(() => {
+	onLoad((options) => {
+		managerInfo.value = options
 		getProjectList();
+	})
+	onReady(() => {
+		uni.setNavigationBarTitle({
+			title: managerInfo.value?.name || '项目管理'
+		})
 	})
 	
 	const search = () => {
@@ -131,8 +135,9 @@
 			  name: searchForm.name
 		  }
 	    });
-		console.log(res)
-		pageSize.total = res.data.length;
+		// console.log(res)
+		
+		// 项目数据初始化
 		processHandler.tableDataSortHandler(res.data)
 		res.data.forEach((item: any) => {	
 			item.companyLabel = item.company.name
@@ -144,10 +149,10 @@
 			const stage = processHandler.calcProjectStage(item)
 			item.stage = stage.seq
 			item.stageLabel = stage.name
-			if (item.status !== 3) {
-				item.delay = processHandler.calcProcedureDelay(item)
-			}
+			item.delay = processHandler.calcProcedureDelay(item)
+			
 		})
+		// 流程获取
 		procedureList.value = procedureList.value.length ? procedureList.value : res.data[0].stages.map((s: any) => {
 			return {
 				label: s.name,
@@ -155,10 +160,12 @@
 			}
 		})
 		
-		const data = filterData(res.data)
-		data.sort((a: any, b: any) => b.delay - a.delay)
-		allList.value = data
-		list.value = data.slice(0, pageSize.size)
+		
+		// 筛选条件
+		const tmpData = filterData(res.data)
+		allList.value = tmpData
+		list.value = tmpData.slice(0, pageSize.size)
+		pageSize.total = tmpData.length;
 		
 	  } catch (error) {
 	    console.error('获取项目失败', error);
@@ -166,21 +173,31 @@
 	};
 	
 	const filterData = (list: any[]) => {
-		let filterData = []
+		let filterData = list
+		// 项目经理
+		if (managerInfo.value) {
+			filterData = filterData.filter(item => {
+				return item.user && (item.user.id == managerInfo.value.id)
+			})
+		}
+		
+		// 项目阶段
 		let isSelect = JSON.stringify(searchForm.stages).indexOf('true') !== -1
 		if (!isSelect) {
-			filterData = list
+			filterData = filterData
 		} else {
-			list.forEach(item => {
-				if (searchForm.stages[item.stage] && item.status !== 3) {
+			filterData.forEach(item => {
+				if (searchForm.stages[item.stage]) {
 					filterData.push(item)
 				}
 			})
 		}
-		
+		// 延期
 		if (searchForm.delay) {
 			filterData = filterData.filter((item: any) => item.delay)
 		}
+		// 排序
+		filterData.sort((a: any, b: any) => b.delay - a.delay)
 		
 		return filterData
 	}
@@ -192,9 +209,7 @@
 		  	url: '/pages/index/details'
 		  })
 	  }
-	
-	
-	
+	  
 	
 </script>
 

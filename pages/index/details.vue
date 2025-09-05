@@ -28,10 +28,10 @@
 		</view>
 
 		<!-- 项目当前节点时间轴 -->
-		<view v-if="projectInfo.status != 3" class="card">
+		<view class="card">
 			<view class="card-title">
 				<text>当前节点</text>
-				<block v-if="projectInfo.status != 3 && projectInfo.delay">
+				<block v-if="projectInfo.delay">
 					<uv-tags class="tag" text="延期" size="mini"
 						:type="projectInfo.delay === 1 ? 'warning' : 'error'"></uv-tags>
 				</block>
