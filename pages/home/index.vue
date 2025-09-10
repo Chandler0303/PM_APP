@@ -7,6 +7,10 @@
 		</view>
 		<view class="static-list">
 			<view class="static-item">
+				<text>项目总数</text>
+				<text>{{ staticNum.count }}</text>
+			</view>
+			<view class="static-item">
 				<text>未开工</text>
 				<text>{{ staticNum.pending }}</text>
 			</view>
@@ -22,10 +26,10 @@
 		
 		<view class="stage-list">
 			<view v-for="item in stagesStatic" :key="item.seq" class="stage-item">
-				<text>{{ item.name }}（{{ item.count }}/{{ item.projectLen }}）</text>
+				<text>{{ item.name }}（{{ item.count }}/{{ staticNum.count }}）</text>
 				<uv-line-progress
-					:percentage="(item.count/item.projectLen* 100).toFixed()"
-					:activeColor="item.count === item.projectLen ? '#5ac725' : '#3c9cff'"
+					:percentage="(item.count/staticNum.count* 100).toFixed()"
+					:activeColor="item.count === staticNum.count ? '#5ac725' : '#3c9cff'"
 					height="40rpx"
 				></uv-line-progress>
 			</view>
@@ -57,6 +61,7 @@
 	})
 	const stagesStatic = ref([])
 	const staticNum = reactive({
+		count: 0,
 		pending: 0,
 		inProgress: 0,
 		completed: 0
@@ -82,8 +87,7 @@
 		  return {
 			seq: s.seq,
 			name: s.name,
-			count: 0,
-			projectLen: res.data.length
+			count: 0
 		  }
 		})
 		const statusObj: any = {};
@@ -119,6 +123,7 @@
 		})
 		
 		stagesStatic.value = stages
+		staticNum.count = res.data.length
 		staticNum.pending = statusObj[1]
 		staticNum.inProgress = statusObj[2]
 		staticNum.completed = statusObj[3]
@@ -145,8 +150,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-bottom: 40rpx;
-			padding-top: 20rpx;
+			margin-bottom: 20rpx;
 			image{
 				width: 180rpx;
 				height: 180rpx;
@@ -158,33 +162,38 @@
 			}
 		}
 		.static-item:nth-child(1){
-			background-color: #f1a532;
+			background-color: #0e398a;
 		}
 		.static-item:nth-child(2){
-			background-color: #3c9cff;
-			margin: 0 20rpx;
+			background-color: #f1a532;
 		}
 		.static-item:nth-child(3){
+			background-color: #3c9cff;
+		}
+		.static-item:nth-child(4){
 			background-color: #5ac725;
 		}
 		.static-list{
 			display: flex;
+			flex-wrap: wrap;
+			justify-content: space-between;
 		}
 		.static-item{
 			display: flex;
 			flex-direction: column;
 			align-items:  center;
 			justify-content: space-between;
-			width: 100%;
+			width: 48%;
 			height: 160rpx;
 			padding: 20rpx 40rpx;
 			border-radius: 20rpx;
 			font-size: 36rpx;
 			color: white;
 			font-weight: bold;
+			margin-bottom: 20rpx;
 		}
 		.stage-list{
-			margin-top: 40rpx;
+			margin-top: 20rpx;
 		}
 		.stage-item{
 			margin-bottom: 20rpx;
@@ -200,7 +209,7 @@
 		.menus-list{
 			display: flex;
 			flex-wrap: wrap;
-			margin-top: 50rpx;
+			margin-top: 30rpx;
 		}
 		.gray-border-right{
 			border-right: 1px solid #eee;
@@ -212,9 +221,9 @@
 			flex: 1;
 			background-color: white;
 			image{
-				width: 120rpx;
-				height: 120rpx;
-				margin-bottom: 20rpx;
+				width: 100rpx;
+				height: 100rpx;
+				margin-bottom: 10rpx;
 			}
 		}
 	}
