@@ -1,9 +1,15 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
-			"path": "pages/projectManager/index",
+			"path": "pages/home/index",
 			"style": {
 				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/projectManager/index",
+			"style": {
+				"navigationBarTitleText": "项目经理"
 			}
 		},
 		{
@@ -17,22 +23,7 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
-		}
-	,{
-    "path": "uni_modules/rt-uni-update/components/rt-uni-update/rt-uni-update",
-    "style": {
-        "app-plus": {
-            "animationDuration": 200,
-            "animationType": "fade-in",
-            "background": "transparent",
-            "backgroundColorTop": "transparent",
-            "popGesture": "none",
-            "scrollIndicator": false,
-            "titleNView": false
-        },
-        "disableScroll": true
-    }
-}
+		}	
 ],
 
 	"globalStyle": {

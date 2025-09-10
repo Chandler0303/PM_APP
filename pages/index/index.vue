@@ -174,7 +174,7 @@
 	const filterData = (list: any[]) => {
 		let filterData = list
 		// 项目经理
-		if (managerInfo.value) {
+		if (managerInfo.value && managerInfo.value.id) {
 			filterData = filterData.filter(item => {
 				return item.user && (item.user.id == managerInfo.value.id)
 			})

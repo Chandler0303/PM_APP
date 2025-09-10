@@ -28,7 +28,7 @@
 							// console.log(newVersion, nowVersion)
 							if (nowVersion < newVersion){
 								uni.showModal({
-									title: newApp.name + '更新提示',
+									title: newApp.name + '版本更新提示',
 									content: newApp.remark || '问题修复',
 									showCancel: false,
 									confirmText: '更新'

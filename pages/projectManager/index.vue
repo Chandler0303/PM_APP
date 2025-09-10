@@ -1,9 +1,8 @@
 <template>
 	<view class="index-view">
-		<uv-status-bar></uv-status-bar>
 		<view class="header">
 			<view class="input-view">
-				<uv-input v-model="searchForm.name" placeholder="请输入名称"></uv-input>
+				<uv-input v-model="searchForm.name" placeholder="请输入项目经理/项目名称"></uv-input>
 				<uv-button size="small" type="primary" @tap="search">搜索</uv-button>
 			</view>
 		</view>
@@ -139,7 +138,6 @@
 		allList.value = tmpData
 		list.value = tmpData.slice(0, pageSize.size)
 		pageSize.total = tmpData.length;
-		// console.log(tmpData)
 	  } catch (error) {
 	    console.error('获取项目失败', error);
 	  }
@@ -147,11 +145,13 @@
 	
 	const filterData = (list: any[]) => {
 		let filterData = list
-		
 		if (searchForm.name) {
-			filterData = filterData.filter((item: any) => item.name.indexOf(searchForm.name) !== -1)
+			filterData = filterData.filter((item: any) => {
+				const isName = item.name.indexOf(searchForm.name) !== -1
+				const isProjectName = item.projectList.find(p => p.name.indexOf(searchForm.name) !== -1)
+				return isName || isProjectName
+			})
 		}
-		
 		return filterData
 	}
 	
@@ -194,7 +194,7 @@
 			}
 			scroll-view{
 				width: 100%;
-				height: calc(100% - 102rpx - var(--status-bar-height));
+				height: calc(100% - 102rpx);
 				background-color: white;
 				
 				.list{

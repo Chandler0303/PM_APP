@@ -26,6 +26,7 @@ import ULine from '@climblee/uv-ui/components/uv-line/uv-line.vue'
 import UList from '@climblee/uv-ui/components/uv-list/uv-list.vue'
 import UListItem from '@climblee/uv-ui/components/uv-list-item/uv-list-item.vue'
 import UDivider from '@climblee/uv-ui/components/uv-divider/uv-divider.vue'
+import ULineProgress from '@climblee/uv-ui/components/uv-line-progress/uv-line-progress.vue' 
 export function createApp() {
 	
   const app = createSSRApp(App)
@@ -41,6 +42,7 @@ export function createApp() {
    app.component(UListItem.name, UListItem)
     app.component(ULine.name, ULine)
 	 app.component(UDivider.name, UDivider)
+	 app.component(ULineProgress.name, ULineProgress)
   return {
     app
   }
